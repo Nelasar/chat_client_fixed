@@ -335,21 +335,18 @@ inline bool main_menu() {
         break;
     }
     case ONLINE: {
-        while (true) {
+        while (true){
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Enter a message:" << std::endl;
 
+            
+            Message msg(current_user->get_name());
 
-            std::cout << "Enter a message to send to the server: " << std::endl;
-            //std::cin.ignore(std::numeric_limits<std::streamsize>::max());
-            std::cin >> message;
-            /*
-            Message msg{};
             std::cin >> msg;
-            std::cout << "CLASS MESSAGE: " << msg << std::endl;
-            std::string full_message = current_user->get_name() + ": " + msg.get_msg();
-            std::cout << "FULL MSG: " << full_message << std::endl;
+            //std::string full_message = msg.get_auth() + ": " + msg.get_msg();
 
-            strcpy(message, msg.get_msg().c_str());
-            std::cout << "CONVERTED: " << message << std::endl;*/
+            strcpy(message, msg.formated_message().c_str());
+            // std::cin.getline(message, MESSAGE_BUFFER);
 
             if (strcmp(message, "end") == 0) {
                 // Send the termination message to the server
@@ -365,12 +362,11 @@ inline bool main_menu() {
             }
             else {
                 // Send the message to the server
-                sendto(socket_descriptor, message, static_cast<int>(strlen(message)), 0, nullptr, sizeof(serveraddress));
-                std::cout << "Message sent successfully to the server: " << message << std::endl;
+                sendto(socket_descriptor, message, strlen(message), 0, nullptr, sizeof(serveraddress));
                 std::cout << "Waiting for a response from the server..." << std::endl;
             }
 
-            std::cout << "Message received from server: " << std::endl;
+            // std::cout << "Message received from server: " << std::endl;
             // Receive the response from the server
             recvfrom(socket_descriptor, buffer, sizeof(buffer), 0, nullptr, nullptr);
             std::cout << buffer << std::endl;
